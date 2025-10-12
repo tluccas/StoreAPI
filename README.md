@@ -19,6 +19,12 @@ Desenvolvida com **Node.js, Express e MySQL**, seguindo a **arquitetura MVC**, g
 - **JavaScript (ES6+)**
 - **MVC** – separação de responsabilidades (Controller, Service, Routes)
 
+
+> [!NOTE]
+> A persistência de produtos utilizando MySQL ainda está em desenvolvimento.
+>No momento, para fins de teste, os produtos são armazenados em um array temporário.
+>A funcionalidade de autenticação também está em desenvolvimento.
+
 ---
 
 ## ⚡ Funcionalidades
