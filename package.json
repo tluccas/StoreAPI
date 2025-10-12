@@ -7,9 +7,10 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "sucrase": "^3.35.0"
   },
   "scripts": {
-    "dev" : "nodemon ./src/server.js"
+    "dev": "nodemon ./src/server.js"
   }
 }
