@@ -1,4 +1,5 @@
-const ProdutoService = require('../service/ProdutoService');
+import ProdutoService from '../service/ProdutoService';
+
 const service = new ProdutoService();
 
 class ProdutoController {
@@ -57,4 +58,4 @@ class ProdutoController {
     }
 }
 
-module.exports = new ProdutoController();
+export default new ProdutoController();

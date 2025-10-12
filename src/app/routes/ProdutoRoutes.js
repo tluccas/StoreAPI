@@ -1,6 +1,7 @@
-const {Router} = require('express');
+import {Router} from 'express';
+import ProdutoController from '../controller/ProdutoController';
+
 const routes = new Router();
-const ProdutoController = require('../controller/ProdutoController');
 
 routes.get('/preco', ProdutoController.listarPorPreço);
 routes.get('/', ProdutoController.listarTodos);
@@ -14,4 +15,4 @@ routes.put('/estoque/:id', ProdutoController.atualizarEstoque);
 
 routes.delete('/:id', ProdutoController.deletar);
 
-module.exports = routes;
+export default routes;

@@ -50,4 +50,4 @@ class ProdutoService {
 }
 
 
-module.exports = ProdutoService;
+export default ProdutoService;
