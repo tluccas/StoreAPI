@@ -1,7 +1,7 @@
 {
-  "name": "dominando-node-js",
+  "name": "StoreApi",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "license": "MIT",
   "dependencies": {
     "express": "^5.1.0"
