@@ -1,0 +1,5 @@
+{
+    "singleQuote": false,
+    "parser": "flow",
+    "eslint-disable-next-line": false
+}
