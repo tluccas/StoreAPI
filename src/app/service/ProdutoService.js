@@ -1,4 +1,6 @@
-class ProdutoService {
+import Product from "../models/entity/Product.js";
+
+class ProductService {
   constructor() {
     this.produtos = [
       { id: 1, nome: "Café", preco: 15.5, estoque: 10 },
@@ -8,47 +10,98 @@ class ProdutoService {
     ];
   }
 
-  listarTodos() {
-    return this.produtos;
+  async listarTodos() {
+    const data = await Product.findAll({
+      limit: 1000,
+    });
+
+    return data;
   }
 
-  listarPorID(id) {
-    return this.produtos.find((item) => item.id === id);
+  async listarPorID(id) {
+    const product = await Product.findByPk(id);
+    if (!product) {
+      throw new Error(`Produto com ID ${id} não encontrado.`);
+    }
+    return product;
   }
 
-  listarPorPreco(preco) {
-    return this.produtos.filter(
-      (item) => item.preco.toFixed(2) == preco.toFixed(2),
-    );
+  async listarPorPreco(preco) {
+    const products = await Product.findAll({
+      where: {
+        price: preco,
+      },
+    });
+
+    if (products == null || products.length === 0) {
+      throw new Error(`Nenhum produto encontrado com o preço ${preco}.`);
+    }
+    return products;
   }
 
-  adicionar(nome, preco, estoque) {
-    const id = this.produtos[this.produtos.length - 1].id + 1;
-    const novoProduto = { id, nome, preco, estoque };
-    this.produtos.push(novoProduto);
-    return novoProduto;
-  }
-
-  atualizar(id, nome, preco, estoque) {
-    const index = this.produtos.findIndex((item) => item.id === id);
-    if (index < 0) return null;
-    this.produtos[index] = { id, nome, preco, estoque };
-    return this.produtos[index];
-  }
-
-  atualizarEstoque(id, novoEstoque) {
-    const produto = this.listarPorID(id);
-    if (!produto) return null;
-
-    produto.estoque = novoEstoque;
-    return produto;
-  }
-
-  remover(id) {
-    const index = this.produtos.findIndex((item) => item.id === id);
-    if (index < 0) return null;
-    return this.produtos.splice(index, 1)[0];
+  async adicionar(nome, preco, estoque, imagem, categoriaId) { // POSSÍVEL MELHORIA AQUI
+    try{
+      const newProduct = await Product.create({
+        name: nome,
+        price: preco,
+        stock: estoque,
+        image: imagem,
+        categoryId: categoriaId,
+      });
+      return newProduct;
+    }catch(error){
+      console.error("Erro ao criar produto:", error);
+      throw new Error("Não foi possível criar o produto.");
   }
 }
 
-export default ProdutoService;
+ async atualizar(id, nome, preco, estoque) {
+  try {
+    const product = await this.listarPorID(id);
+
+    await product.update({
+      name: nome,
+      price: preco,
+      stock: estoque
+    });
+
+    return product;
+  } catch (error) {
+    console.error("Erro ao atualizar produto:", error);
+    throw new Error("Não foi possível atualizar o produto.");
+  }
+}
+
+
+  async atualizarEstoque(id, novoEstoque) {
+    try{
+      const product = await this.listarPorID(id);
+      
+      await product.update({
+        stock: novoEstoque
+      });
+
+      return product;
+    }catch(error){
+      console.error("Erro ao atualizar estoque do produto:", error);
+      throw new Error("Não foi possível atualizar o estoque do produto.");
+    }
+  }
+
+  async remover(id) {
+    try{
+      const product = await this.listarPorID(id);
+
+      await product.destroy();
+      return true;
+    }catch(error){
+      console.error("Erro ao remover produto:", error);
+      throw new Error("Não foi possível remover o produto.");
+    }
+    
+  }
+
+  }
+
+
+export default ProductService;
