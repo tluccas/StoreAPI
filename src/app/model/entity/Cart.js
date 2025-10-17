@@ -1,15 +1,30 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/database";
+import Sequelize, { Model } from "sequelize";
 
-const Cart = sequelize.define(
-  "Cart",
-  {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false },
-  },
-  {
-    timestamps: true,
-  },
-);
+class Cart extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+        userId: { type: Sequelize.INTEGER, allowNull: false },
+      },
+      {
+        sequelize,
+        tableName: "carts_tb",
+        freezeTableName: true,
+        timestamps: true,
+      },
+    );
+  }
+
+  static associate(models) {
+    if (models && models.User) {
+      this.belongsTo(models.User, { foreignKey: "userId" });
+    }
+
+    if (models && models.CartItem) {
+      this.hasMany(models.CartItem, { foreignKey: "cartId" });
+    }
+  }
+}
 
 export default Cart;

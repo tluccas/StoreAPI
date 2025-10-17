@@ -1,18 +1,29 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/database";
+import Sequelize, { Model } from "sequelize";
 
-const Payment = sequelize.define(
-  "Payment",
-  {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    orderId: { type: DataTypes.INTEGER, allowNull: false },
-    amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-    method: { type: DataTypes.STRING, allowNull: false },
-    status: { type: DataTypes.STRING, defaultValue: "pending" },
-  },
-  {
-    timestamps: true,
-  },
-);
+class Payment extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+        orderId: { type: Sequelize.INTEGER, allowNull: false },
+        amount: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
+        method: { type: Sequelize.STRING, allowNull: false },
+        status: { type: Sequelize.STRING, defaultValue: "pending" },
+      },
+      {
+        sequelize,
+        tableName: "payments_tb",
+        freezeTableName: true,
+        timestamps: true,
+      },
+    );
+  }
+
+  static associate(models) {
+    if (models && models.Order) {
+      this.belongsTo(models.Order, { foreignKey: "orderId" });
+    }
+  }
+}
 
 export default Payment;

@@ -1,18 +1,33 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/database";
+import Sequelize, { Model } from "sequelize";
 
-const User = sequelize.define(
-  "User",
-  {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
-    password: { type: DataTypes.STRING, allowNull: false },
-    role: { type: DataTypes.STRING, defaultValue: "user" },
-  },
-  {
-    timestamps: true,
-  },
-);
+class User extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+        name: { type: Sequelize.STRING, allowNull: false },
+        email: { type: Sequelize.STRING, allowNull: false, unique: true },
+        password: { type: Sequelize.STRING, allowNull: false },
+        role: { type: Sequelize.STRING, defaultValue: "user" },
+      },
+      {
+        sequelize,
+        tableName: "users_tb",
+        freezeTableName: true,
+        timestamps: true,
+      },
+    );
+  }
+
+  static associate(models) {
+    if (models && models.Order) {
+      this.hasMany(models.Order, { foreignKey: "userId" });
+    }
+
+    if (models && models.Cart) {
+      this.hasOne(models.Cart, { foreignKey: "userId" });
+    }
+  }
+}
 
 export default User;
