@@ -1,4 +1,5 @@
-import Payment from "../models/entity/Payment";
+import models from "../../database/index.js";
+const { Payment } = models;
 
 class PaymentService {
   constructor() {}
