@@ -1,6 +1,8 @@
 import express from "express";
 import produtoRoutes from "./app/routes/ProdutoRoutes";
 
+import "./database";
+
 class App {
   constructor() {
     this.server = express();
