@@ -4,12 +4,28 @@ const { Product } = models;
 class ProductService {
   constructor() {}
 
-  async findAll() {
-    const data = await Product.findAll({
-      limit: 100,
-    });
+  async findAll(page, limit) {
+    try {
+      const offset = (page - 1) * limit;
 
-    return data;
+      const totalItems = await Product.count();
+      const data = await Product.findAll({
+        limit,
+        offset,
+        order: [["id", "ASC"]],
+      });
+
+      return {
+        page,
+        perPage: limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+        data,
+      };
+    } catch (err) {
+      console.error("Erro no ProductService.findAll:", err);
+      throw new Error("Falha ao buscar produtos no banco de dados");
+    }
   }
 
   async findById(id) {

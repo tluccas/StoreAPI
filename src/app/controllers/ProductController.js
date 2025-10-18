@@ -7,10 +7,25 @@ class ProdutoController {
   }
 
   async findAll(req, res) {
-    const produtos = await service.findAll();
-    return res
-      .status(produtos ? 200 : 400)
-      .json(produtos || { erro: "Nenhum produto encontrado" });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 25;
+
+    try {
+      const produtos = await service.findAll(page, limit);
+      return res.status(200).json(produtos);
+    } catch (error) {
+      console.error("Erro no ProductController.findAll:", error.message);
+
+      if (error.message.includes("banco de dados")) {
+        return res.status(500).json({
+          erro: "Erro interno ao buscar produtos. Tente novamente mais tarde ou entre em contato com o suporte.",
+        });
+      }
+
+      return res.status(400).json({
+        erro: error.message || "Erro inesperado ao buscar produtos.",
+      });
+    }
   }
 
   async findById(req, res) {
