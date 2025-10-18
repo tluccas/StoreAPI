@@ -1,17 +1,17 @@
 import { Router } from "express";
-import ProdutoController from "../controller/ProdutoController";
+import ProductController from "../controllers/ProductController";
 
 const routes = new Router();
 
-routes.get("/preco", ProdutoController.listarPorPreço);
-routes.get("/", ProdutoController.listarTodos);
-routes.get("/:id", ProdutoController.listarPorID);
+routes.get("/preco", ProductController.listarPorPreço);
+routes.get("/", ProductController.listarTodos);
+routes.get("/:id", ProductController.listarPorID);
 
-routes.post("/", ProdutoController.criar);
+routes.post("/", ProductController.criar);
 
-routes.put("/:id", ProdutoController.atualizar);
-routes.put("/estoque/:id", ProdutoController.atualizarEstoque);
+routes.put("/:id", ProductController.atualizar);
+routes.put("/estoque/:id", ProductController.atualizarEstoque);
 
-routes.delete("/:id", ProdutoController.deletar);
+routes.delete("/:id", ProductController.deletar);
 
 export default routes;
