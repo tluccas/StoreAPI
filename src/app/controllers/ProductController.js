@@ -1,5 +1,4 @@
 import ProdutoService from "../services/ProductService";
-
 const service = new ProdutoService();
 
 class ProdutoController {
@@ -7,65 +6,115 @@ class ProdutoController {
     return res.json(service.findAll());
   }
 
-  async listarPorID(req, res) {
-    const id = parseInt(req.params.id);
-    const produto = await service.findById(id);
+  async findAll(req, res) {
+    const produtos = await service.findAll();
     return res
-      .status(produto ? 200 : 404)
-      .json(produto || { erro: "Produto não encontrado" });
+      .status(produtos ? 200 : 400)
+      .json(produtos || { erro: "Nenhum produto encontrado" });
   }
 
-  listarPorPreço(req, res) {
-    const precoQuery = req.query.preco;
+  async findById(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      const product = await service.findById(id);
+      return res.status(200).json(product);
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ erro: error.message || "Produto não encontrado" });
+    }
+  }
+
+  async findByPrice(req, res) {
+    const precoQuery = req.query.price;
 
     if (!precoQuery) {
-      return res.status(400).json({ erro: "Parâmetro 'preco' obrigatório" });
+      return res.status(400).json({ erro: "Parâmetro 'price' obrigatório" });
     }
 
     const preco = parseFloat(precoQuery);
     if (isNaN(preco)) {
-      return res.status(400).json({ erro: "Parâmetro 'preco' inválido" });
+      return res.status(400).json({ erro: "Parâmetro 'price' inválido" });
     }
 
-    const produtos = service.findByPreco(preco);
-    const status = produtos.length > 0 ? 200 : 404;
+    const products = await service.findByPreco(preco);
+    const status = products.length > 0 ? 200 : 404;
     return res
       .status(status)
       .json(
-        produtos.length > 0 ? produtos : { erro: "Produtos não encontrados" },
+        products.length > 0 ? products : { erro: "Produtos não encontrados" },
       );
   }
 
-  criar(req, res) {
-    const { nome, preco, estoque } = req.body;
-    const novo = service.create(nome, preco, estoque);
-    return res.status(201).json(novo);
+  async criar(req, res) {
+    try {
+      const { name, price, stock, categoryId, image, description } = req.body;
+
+      const novo = await service.create({
+        name,
+        price,
+        description,
+        stock,
+        image: image || null,
+        categoryId,
+      });
+
+      return res.status(201).json(novo);
+    } catch (error) {
+      console.error("Erro ao criar produto:", error);
+      return res
+        .status(500)
+        .json({ erro: "Não foi possível criar o produto." });
+    }
   }
 
-  atualizar(req, res) {
+  async update(req, res) {
     const id = parseInt(req.params.id);
-    const { nome, preco, estoque } = req.body;
-    const atualizado = service.update(id, nome, preco, estoque);
-    return res
-      .status(atualizado ? 200 : 404)
-      .json(atualizado || { erro: "Produto não encontrado" });
+    const { name, description, price, stock } = req.body;
+
+    try {
+      const atualizado = await service.update(
+        id,
+        name,
+        description,
+        price,
+        stock,
+      );
+      return res.status(200).json(atualizado);
+    } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
+
+      const status =
+        error.status || (error.message.includes("não encontrado") ? 404 : 500);
+
+      return res.status(status).json({ erro: error.message });
+    }
   }
 
-  atualizarEstoque(req, res) {
+  async updateStock(req, res) {
     const id = parseInt(req.params.id);
-    const { estoque } = req.body;
-    const atualizado = service.updateEstoque(id, estoque);
-    return res
-      .status(atualizado ? 200 : 404)
-      .json(atualizado || { erro: "Produto não encontrado" });
-  }
+    const { stock } = req.body;
 
-  deletar(req, res) {
+    try {
+      const atualizado = await service.updateStock(id, stock);
+      return res.status(200).json(atualizado);
+    } catch (error) {
+      const status =
+        error.status || (error.message.includes("não encontrado") ? 404 : 500);
+      return res.status(status).json({ erro: error.message });
+    }
+  }
+  async delete(req, res) {
     const id = parseInt(req.params.id);
-    const removido = service.delete(id);
-    return res
-      .status(removido ? 200 : 404)
-      .json(removido || { erro: "Produto não encontrado" });
+
+    try {
+      await service.delete(id);
+      return res.status(200).json({ sucesso: true });
+    } catch (error) {
+      const status =
+        error.status || (error.message.includes("não encontrado") ? 404 : 500);
+      return res.status(status).json({ erro: error.message });
+    }
   }
 }
 

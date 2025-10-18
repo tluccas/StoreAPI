@@ -3,15 +3,15 @@ import ProductController from "../controllers/ProductController";
 
 const routes = new Router();
 
-routes.get("/preco", ProductController.listarPorPreço);
-routes.get("/", ProductController.listarTodos);
-routes.get("/:id", ProductController.listarPorID);
+routes.get("/preco", ProductController.findByPrice);
+routes.get("/", ProductController.findAll);
+routes.get("/:id", ProductController.findById);
 
 routes.post("/", ProductController.criar);
 
-routes.put("/:id", ProductController.atualizar);
-routes.put("/estoque/:id", ProductController.atualizarEstoque);
+routes.put("/:id", ProductController.update);
+routes.put("/estoque/:id", ProductController.updateStock);
 
-routes.delete("/:id", ProductController.deletar);
+routes.delete("/:id", ProductController.delete);
 
 export default routes;

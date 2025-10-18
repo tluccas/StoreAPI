@@ -10,13 +10,19 @@ class Product extends Model {
         price: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
         stock: { type: Sequelize.INTEGER, defaultValue: 0 },
         image: { type: Sequelize.STRING },
-        categoryId: { type: Sequelize.INTEGER, allowNull: false },
+        categoryId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "categoryId",
+        },
       },
       {
         sequelize,
         tableName: "products_tb",
         freezeTableName: true,
         timestamps: true,
+        createdAt: "created_at",
+        updatedAt: "updated_at",
       },
     );
   }

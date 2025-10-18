@@ -1,4 +1,5 @@
-import Product from "../models/entity/Product.js";
+import models from "../../database/index.js";
+const { Product } = models;
 
 class ProductService {
   constructor() {}
@@ -32,20 +33,21 @@ class ProductService {
     return products;
   }
 
-  async create(nome, preco, estoque, imagem, categoriaId) {
-    // POSSÍVEL MELHORIA AQUI
+  async create({ name, price, description, stock, image, categoryId }) {
     try {
-      if (!nome || !preco || !estoque || !categoriaId) {
-        throw new Error("Parâmetros inválidos para criar pagamento.");
+      if (!name || !price || !stock || !categoryId) {
+        throw new Error("Parâmetros inválidos para criar produto.");
       }
 
       const newProduct = await Product.create({
-        name: nome,
-        price: preco,
-        stock: estoque,
-        image: imagem,
-        categoryId: categoriaId,
+        name,
+        description: description || null,
+        price,
+        stock,
+        image: image || null,
+        categoryId,
       });
+
       return newProduct;
     } catch (error) {
       console.error("Erro ao criar produto:", error);
@@ -53,47 +55,57 @@ class ProductService {
     }
   }
 
-  async update(id, nome, preco, estoque) {
+  async update(id, name, description, price, stock) {
     try {
-      const product = await this.listarPorID(id);
-
+      const product = await this.findById(id);
+      if (!name || !price || !description || !stock) {
+        const err = new Error("Parâmetros inválidos para atualizar produto.");
+        err.status = 400;
+        throw err;
+      }
       await product.update({
-        name: nome,
-        price: preco,
-        stock: estoque,
+        name: name,
+        description: description,
+        price: price,
+        stock: stock,
       });
 
       return product;
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
-      throw new Error("Não foi possível atualizar o produto.");
+      throw error;
     }
   }
 
-  async updateEstoque(id, novoEstoque) {
+  async updateStock(id, newStock) {
     try {
-      const product = await this.listarPorID(id);
-
+      const product = await this.findById(id);
+      if (newStock == null || isNaN(newStock) || newStock < 0) {
+        const err = new Error("Parâmetro inválido para atualizar estoque.");
+        err.status = 400;
+        throw err;
+      }
       await product.update({
-        stock: novoEstoque,
+        stock: newStock,
       });
 
       return product;
     } catch (error) {
       console.error("Erro ao atualizar estoque do produto:", error);
-      throw new Error("Não foi possível atualizar o estoque do produto.");
+      throw error;
     }
   }
 
   async delete(id) {
     try {
-      const product = await this.listarPorID(id);
-
+      const product = await this.findById(id);
       await product.destroy();
       return true;
     } catch (error) {
       console.error("Erro ao remover produto:", error);
-      throw new Error("Não foi possível remover o produto.");
+      throw error.status
+        ? error
+        : new Error("Não foi possível remover o produto.");
     }
   }
 }
