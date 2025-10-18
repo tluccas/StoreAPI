@@ -1,2 +1,4 @@
 node_modules/
 teste.js
+.env
+docs/fluxo_backend.pdf

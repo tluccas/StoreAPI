@@ -1,54 +1,51 @@
-import PaymentService from "../services/PaymentService.js";
-const service = new PaymentService();
+import OrderService from "../services/OrderService.js";
+const service = new OrderService();
 
-class PaymentController {
+class OrderController {
   async findAll(req, res) {
-    const payments = await service.findAll();
+    const orders = await service.findAll();
     return res
-      .status(payments ? 200 : 400)
-      .json(payments || { erro: "Nenhum pagamento encontrado" });
+      .status(orders ? 200 : 400)
+      .json(orders || { erro: "Nenhum pedido encontrado" });
   }
 
   async findById(req, res) {
     const id = parseInt(req.params.id);
     try {
-      const payment = await service.findById(id);
-      return res.status(200).json(payment);
+      const order = await service.findById(id);
+      return res.status(200).json(order);
     } catch (error) {
       return res
         .status(404)
-        .json({ erro: error.message || "Pagamento não encontrado" });
+        .json({ erro: error.message || "Pedido não encontrado" });
     }
   }
 
-  async findByOrderId(req, res) {
-    const orderId = parseInt(req.params.orderId);
+  async findByUserId(req, res) {
+    const userId = parseInt(req.params.userId);
     try {
-      const payments = await service.findByOrderId(orderId);
-      return res.status(200).json(payments);
+      const orders = await service.findByUserId(userId);
+      return res.status(200).json(orders);
     } catch (error) {
       return res.status(404).json({
-        erro: error.message || "Nenhum pagamento encontrado para este pedido",
+        erro: error.message || "Nenhum pedido encontrado para este usuário",
       });
     }
   }
 
   async create(req, res) {
     try {
-      const { orderId, amount, method } = req.body;
+      const { userId, items } = req.body;
 
       const novo = await service.create({
-        orderId,
-        amount,
-        method,
+        userId,
+        items,
       });
 
       return res.status(201).json(novo);
     } catch (error) {
-      console.error("Erro ao criar pagamento:", error);
-      return res
-        .status(500)
-        .json({ erro: "Não foi possível criar o pagamento." });
+      console.error("Erro ao criar pedido:", error);
+      return res.status(500).json({ erro: "Não foi possível criar o pedido." });
     }
   }
 
@@ -60,7 +57,7 @@ class PaymentController {
       const atualizado = await service.updateStatus(id, status);
       return res.status(200).json(atualizado);
     } catch (error) {
-      console.error("Erro ao atualizar status do pagamento:", error);
+      console.error("Erro ao atualizar status do pedido:", error);
 
       const statusCode =
         error.status || (error.message.includes("não encontrado") ? 404 : 500);
@@ -83,4 +80,4 @@ class PaymentController {
   }
 }
 
-export default new PaymentController();
+export default new OrderController();
