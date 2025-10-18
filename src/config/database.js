@@ -1,13 +1,14 @@
-/* eslint-disable prettier/prettier */
-module.exports = {
-    dialect: 'mysql',
-    host: 'localhost',
-    username: 'root',
-    password: 'rootlocadora',
-    database: 'store_api',
-    define: {
-        timestamp: true,
-        undescored: true,
-        undescoredAll: true,
-    },
+import dotenv from "dotenv";
+dotenv.config();
+export default {
+  dialect: "mysql",
+  host: process.env.DB_HOST,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  define: {
+    timestamps: true,
+    underscored: true,
+    underscoredAll: true,
+  },
 };
