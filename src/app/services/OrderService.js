@@ -6,7 +6,7 @@ class OrderService {
 
   async findAll() {
     const data = await Order.findAll({
-      limit: 1000,
+      limit: 100,
       include: [{ model: OrderItem, as: "items" }],
     });
 

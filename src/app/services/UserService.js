@@ -6,7 +6,7 @@ class UserService {
 
   async findAll() {
     const data = await User.findAll({
-      limit: 1000,
+      limit: 100,
     });
 
     return data;

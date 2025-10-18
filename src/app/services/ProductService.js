@@ -6,7 +6,7 @@ class ProductService {
 
   async findAll() {
     const data = await Product.findAll({
-      limit: 1000,
+      limit: 100,
     });
 
     return data;

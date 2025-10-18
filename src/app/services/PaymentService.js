@@ -6,7 +6,7 @@ class PaymentService {
 
   async findAll() {
     const data = await Payment.findAll({
-      limit: 1000,
+      limit: 100,
     });
 
     return data;

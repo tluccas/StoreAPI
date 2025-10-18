@@ -6,7 +6,7 @@ class CategoryService {
 
   async findAll() {
     const data = await Category.findAll({
-      limit: 1000,
+      limit: 100,
     });
 
     return data;

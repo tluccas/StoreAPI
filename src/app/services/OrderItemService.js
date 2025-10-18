@@ -6,7 +6,7 @@ class OrderItemService {
 
   async findAll() {
     const data = await OrderItem.findAll({
-      limit: 1000,
+      limit: 100,
       include: [Product],
     });
 
