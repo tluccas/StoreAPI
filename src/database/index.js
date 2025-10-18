@@ -18,7 +18,24 @@ class DataBase {
 
   init() {
     models.forEach((model) => model.init(this.connection));
+
+    models.forEach((model) => {
+      if (model.associate) {
+        model.associate(this.connection.models);
+      }
+    });
   }
 }
 
-export default DataBase;
+const database = new DataBase();
+
+export { database };
+export default {
+  User,
+  Cart,
+  Order,
+  OrderItem,
+  Payment,
+  Product,
+  Category,
+};
