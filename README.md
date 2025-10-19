@@ -1,68 +1,71 @@
-# Store API 🚀
+# StoreAPI 🚀
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white)
 
-Uma **API RESTful** para gerenciar produtos de forma rápida e eficiente.  
-Permite **criar, listar, atualizar e deletar produtos**, além de filtrar por **ID ou preço**, gerenciar estoque e outras funcionalidades.
+Uma **API RESTful robusta e escalável** construída com **Node.js, Express e Sequelize**, projetada para fornecer toda a infraestrutura de back-end necessária para uma aplicação de **e-commerce moderna**.  
 
-Desenvolvida com **Node.js, Express e MySQL**, seguindo a **arquitetura MVC**, garantindo **organização, escalabilidade e fácil manutenção**.
+Ela permite gerenciar **produtos, categorias, usuários, carrinhos, pedidos e pagamentos**, seguindo a **arquitetura MVC** para manter o código modular, organizado e fácil de manter.
 
 ---
 
 ## 💻 Tecnologias
 
-- **Node.js** – runtime JavaScript
-- **Express** – framework web
-- **MySQL** – banco de dados relacional
-- **JavaScript (ES6+)**
+- **Node.js** – runtime JavaScript  
+- **Express** – framework web rápido e flexível  
+- **MySQL** – banco de dados relacional  
+- **Sequelize** – ORM para manipulação de dados  
+- **JavaScript (ES6+)**  
 - **MVC** – separação de responsabilidades (Controller, Service, Routes)
-
-
-> [!NOTE]
-> A persistência de produtos utilizando MySQL ainda está em desenvolvimento.
->No momento, para fins de teste, os produtos são armazenados em um array temporário.
->A funcionalidade de autenticação também está em desenvolvimento.
 
 ---
 
 ## ⚡ Funcionalidades
 
-- ✅ Listar todos os produtos  
-- ✅ Buscar produto por **ID**  
-- ✅ Filtrar produtos por **preço** (`/produtos?preco=8.50`)  
-- ✅ Adicionar novos produtos (nome, preço e estoque)  
-- ✅ Atualizar produtos existentes  
-- ✅ Atualizar apenas o **estoque**  
-- ✅ Remover produtos do catálogo  
+- ✅ Gerenciamento completo de **produtos**  
+  - Listar todos os produtos  
+  - Buscar por **ID**  
+  - Filtrar por **preço**  
+  - Adicionar, atualizar (incluindo estoque) e remover produtos  
+- ✅ Gerenciamento de **categorias**  
+- ✅ Cadastro e autenticação de **usuários**  
+- ✅ Controle de **carrinhos de compras**  
+- ✅ Criação e acompanhamento de **pedidos**  
+- ✅ Processamento de **pagamentos**  
+- ✅ Estrutura modular e escalável para futuras funcionalidades
+
+> [!NOTE]  
+> Algumas funcionalidades ainda estão em desenvolvimento. Atualmente, o foco inicial é no gerenciamento de produtos e estruturação do back-end com Sequelize e MySQL.
 
 ---
 
 ## 📂 Estrutura do Projeto
 
-├─ src/
-│ ├─ controller/ProdutoController.js
-│ ├─ service/ProdutoService.js
-│ ├─ routes/ProdutoRoutes.js
-│ └─ app.js
-│
-├─ package.json
-└─ README.md
-
-- **controller/** – lógica das rotas  
-- **service/** – lógica de negócio (CRUD e consultas)  
-- **routes/** – definição das rotas da API  
-- **app.js** – configuração do servidor Express  
-
-## 🔗 Endpoints (até o momento)
-
-- `GET /produtos`	Lista todos os produtos
-- `GET	/produtos/:id`	Busca produto por ID
-- `GET	/produtos?preco=VALOR`	Filtra produtos por preço
-- `POST	/produtos`	Adiciona novo produto
-- `PUT	/produtos/:id`	Atualiza produto (nome, preço, estoque)
-- `PUT	/produtos/estoque/:id`	Atualiza apenas o estoque
-- `DELETE /produtos/:id`	Remove produto
+src/
+├─ controllers/ # Lógica das rotas
+│ └─ ProdutoController.js
+├─ services/ # Lógica de negócio (CRUD, consultas)
+│ └─ ProdutoService.js
+├─ routes/ # Definição das rotas da API
+│ └─ ProdutoRoutes.js
+├─ models/ # Models Sequelize (Product, User, Category...)
+├─ database/ # Configuração do banco, migrations e seeders
+└─ app.js # Configuração do servidor Express
 
 
+---
+
+## 🔗 Endpoints (Produtos)
+
+- `GET /produtos` – Lista todos os produtos  
+- `GET /produtos/:id` – Busca produto por ID  
+- `GET /produtos?preco=VALOR` – Filtra produtos por preço  
+- `POST /produtos` – Adiciona novo produto  
+- `PUT /produtos/:id` – Atualiza produto (nome, preço, estoque)  
+- `PUT /produtos/estoque/:id` – Atualiza apenas o estoque  
+- `DELETE /produtos/:id` – Remove produto 
+
+> [!NOTE]
+>Em breve a documentação com todos os endpoints estará disponível.
