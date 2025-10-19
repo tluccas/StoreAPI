@@ -6,6 +6,8 @@ import orderRoutes from "./app/routes/OrderRoutes.js";
 import cartRoutes from "./app/routes/CartRoutes.js";
 import orderItemRoutes from "./app/routes/OrderItemRoutes.js";
 import paymentRoutes from "./app/routes/PaymentRoutes.js";
+import authMiddleware from "./app/middlewares/auth.js";
+import sessionRoutes from "./app/routes/SessionsRoutes.js";
 
 import "./database/index.js";
 
@@ -21,6 +23,11 @@ class App {
   }
 
   routes() {
+    //Public routes
+    this.server.use("/sessions", sessionRoutes);
+    //auth middleware
+    this.server.use(authMiddleware);
+    //Protected routes
     this.server.use("/produtos", produtoRoutes);
     this.server.use("/categorias", categoryRoutes);
     this.server.use("/usuarios", userRoutes);

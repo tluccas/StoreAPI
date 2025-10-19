@@ -7,8 +7,14 @@ class Payment extends Model {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
         orderId: { type: Sequelize.INTEGER, allowNull: false },
         amount: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
-        method: { type: Sequelize.STRING, allowNull: false },
-        status: { type: Sequelize.STRING, defaultValue: "pending" },
+        method: {
+          type: Sequelize.ENUM("credit", "debit", "cash", "pix"),
+          allowNull: false,
+        },
+        status: {
+          type: Sequelize.ENUM("pending", "confirmed", "canceled"),
+          defaultValue: "pending",
+        },
       },
       {
         sequelize,
@@ -24,6 +30,33 @@ class Payment extends Model {
           },
           canceled: {
             where: { status: "canceled" },
+          },
+          byMethod(methods) {
+            return { where: { method: { [Sequelize.Op.in]: methods } } };
+          },
+          currentMonth() {
+            const now = new Date();
+            const startDate = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              1,
+              0,
+              0,
+              0,
+            );
+            const endDate = new Date(
+              now.getFullYear(),
+              now.getMonth() + 1,
+              0,
+              23,
+              59,
+              59,
+            );
+            return {
+              where: {
+                createdAt: { [Sequelize.Op.between]: [startDate, endDate] },
+              },
+            };
           },
         },
       },
