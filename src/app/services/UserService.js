@@ -35,10 +35,6 @@ class UserService {
 
   async create({ name, email, password, role }) {
     try {
-      if (!name || !email || !password) {
-        throw new Error("Parâmetros inválidos para criar usuário.");
-      }
-
       const newUser = await User.create({
         name,
         email,
@@ -56,17 +52,14 @@ class UserService {
   async update(id, name, email, password, role) {
     try {
       const user = await this.findById(id);
-      if (!name || !email) {
-        const err = new Error("Parâmetros inválidos para atualizar usuário.");
-        err.status = 400;
-        throw err;
-      }
-      await user.update({
-        name,
-        email,
-        password,
-        role,
-      });
+
+      const updateData = { name, email, password, role };
+
+      Object.keys(updateData).forEach(
+        (key) => updateData[key] === undefined && delete updateData[key],
+      );
+
+      await user.update(updateData);
 
       return user;
     } catch (error) {
