@@ -1,4 +1,4 @@
-import models from "../../database/migrations/index.js";
+import models from "../../database/index.js";
 const { Cart, CartItem, Product } = models;
 
 //Criar lógica para limpar carrinho após criar o pedido referente aos intens

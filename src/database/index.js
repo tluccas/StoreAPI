@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
-import config from "../../config/database.js";
-import User from "../../app/models/entity/User.js";
-import Cart from "../../app/models/entity/Cart.js";
-import Order from "../../app/models/entity/Order.js";
-import OrderItem from "../../app/models/entity/OrderItem.js";
-import Payment from "../../app/models/entity/Payment.js";
-import Product from "../../app/models/entity/Product.js";
-import Category from "../../app/models/entity/Category.js";
-import CartItem from "../../app/models/entity/CartItem.js";
+import config from "../config/database.js";
+import User from "../app/models/entity/User.js";
+import Cart from "../app/models/entity/Cart.js";
+import Order from "../app/models/entity/Order.js";
+import OrderItem from "../app/models/entity/OrderItem.js";
+import Payment from "../app/models/entity/Payment.js";
+import Product from "../app/models/entity/Product.js";
+import Category from "../app/models/entity/Category.js";
+import CartItem from "../app/models/entity/CartItem.js";
 
 const models = [
   User,

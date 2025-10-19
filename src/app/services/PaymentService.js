@@ -1,4 +1,4 @@
-import models from "../../database/migrations/index.js";
+import models from "../../database/index.js";
 const { Payment, Order } = models;
 
 class PaymentService {

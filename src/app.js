@@ -7,7 +7,7 @@ import cartRoutes from "./app/routes/CartRoutes.js";
 import orderItemRoutes from "./app/routes/OrderItemRoutes.js";
 import paymentRoutes from "./app/routes/PaymentRoutes.js";
 
-import "./database/migrations/index.js";
+import "./database/index.js";
 
 class App {
   constructor() {
