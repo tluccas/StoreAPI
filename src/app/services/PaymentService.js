@@ -33,6 +33,24 @@ class PaymentService {
     return payments;
   }
 
+  async findByMethod(method) {
+    try {
+      const payments = await Payment.scope({
+        method: [
+          "byMethod",
+          method.split(",").map((item) => item.toLowerCase()),
+        ],
+      }).findAll();
+      if (payments == null || payments.length === 0) {
+        throw new Error(`Nenhum pagamento encontrado para o método ${method}.`);
+      }
+      return payments;
+    } catch (error) {
+      console.error("Erro ao buscar pagamentos por método:", error);
+      throw error;
+    }
+  }
+
   async create({ orderId, amount, method }) {
     try {
       if (!orderId || !amount || !method) {
@@ -48,11 +66,7 @@ class PaymentService {
         orderId,
         amount,
         method,
-        status: "completed",
       });
-
-      order.status = "paid";
-      await order.save();
 
       return newPayment;
     } catch (error) {
@@ -75,9 +89,31 @@ class PaymentService {
         status,
       });
 
+      if (status === "confirmed") {
+        const order = await Order.findByPk(payment.orderId);
+        if (order) {
+          order.status = "paid";
+          await order.save();
+        }
+      }
+
       return payment;
     } catch (error) {
       console.error("Erro ao atualizar status do pagamento:", error);
+      throw error;
+    }
+  }
+
+  async getCurrentMensalPayments() {
+    try {
+      const payments = await Payment.scope("currentMonth").findAll();
+      if (payments == null || payments.length === 0) {
+        throw new Error("Nenhum pagamento encontrado para o mês atual.");
+      }
+
+      return payments;
+    } catch (error) {
+      console.error("Erro ao buscar pagamentos do mês atual:", error);
       throw error;
     }
   }
