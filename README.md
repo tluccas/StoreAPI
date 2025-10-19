@@ -36,9 +36,6 @@ Ela permite gerenciar **produtos, categorias, usuários, carrinhos, pedidos e pa
 - ✅ Processamento de **pagamentos**  
 - ✅ Estrutura modular e escalável para futuras funcionalidades
 
-> [!NOTE]  
-> Algumas funcionalidades ainda estão em desenvolvimento. Atualmente, o foco inicial é no gerenciamento de produtos e estruturação do back-end com Sequelize e MySQL.
-
 ---
 
 ## 📂 Estrutura do Projeto
