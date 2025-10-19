@@ -59,10 +59,9 @@ class UserController {
       if (error.name === "ValidationError") {
         return res.status(400).json({ errors: error.errors });
       }
-      console.error("Erro ao criar usuário:", error);
       return res
-        .status(500)
-        .json({ erro: "Não foi possível criar o usuário." });
+        .status(error.status || 500)
+        .json({ erro: error.message || "Não foi possível criar o usuário." });
     }
   }
 

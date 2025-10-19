@@ -35,6 +35,12 @@ class UserService {
 
   async create({ name, email, password, role }) {
     try {
+      const emailExists = await User.findOne({ where: { email } });
+      if (emailExists) {
+        const err = new Error("Email já está em uso.");
+        err.status = 409;
+        throw err;
+      }
       const newUser = await User.create({
         name,
         email,
@@ -45,7 +51,9 @@ class UserService {
       return newUser;
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
-      throw new Error("Não foi possível criar o usuário.");
+      throw error.status
+        ? error
+        : new Error("Não foi possível criar o usuário.");
     }
   }
 
