@@ -39,17 +39,18 @@ Ela permite gerenciar **produtos, categorias, usuários, carrinhos, pedidos e pa
 ---
 
 ## 📂 Estrutura do Projeto
-
+```text
 src/
-├─ controllers/ # Lógica das rotas
-│ └─ ProdutoController.js
-├─ services/ # Lógica de negócio (CRUD, consultas)
-│ └─ ProdutoService.js
-├─ routes/ # Definição das rotas da API
-│ └─ ProdutoRoutes.js
-├─ models/ # Models Sequelize (Product, User, Category...)
-├─ database/ # Configuração do banco, migrations e seeders
-└─ app.js # Configuração do servidor Express
+├─ controllers/        # Lógica das rotas
+│  └─ ProdutoController.js
+├─ services/           # Lógica de negócio (CRUD, consultas)
+│  └─ ProdutoService.js
+├─ routes/             # Definição das rotas da API
+│  └─ ProdutoRoutes.js
+├─ models/             # Models Sequelize (Product, User, Category...)
+├─ database/           # Configuração do banco, migrations e seeders
+└─ app.js              # Configuração do servidor Express
+```
 
 
 ---
