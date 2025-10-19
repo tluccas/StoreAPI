@@ -15,6 +15,17 @@ class Payment extends Model {
         tableName: "payments_tb",
         freezeTableName: true,
         timestamps: true,
+        scopes: {
+          pending: {
+            where: { status: "pending" },
+          },
+          confirmed: {
+            where: { status: "confirmed" },
+          },
+          canceled: {
+            where: { status: "canceled" },
+          },
+        },
       },
     );
   }
