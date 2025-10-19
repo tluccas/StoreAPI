@@ -57,36 +57,47 @@ class UserService {
     }
   }
 
-  async update(id, name, email, password, role) {
-    try {
-      const user = await this.findById(id);
+  async update(id, updateData) {
+    const user = await this.findById(id);
+    const { name, email, oldPassword, password, role } = updateData;
 
-      const updateData = { name, email, password, role };
-
-      Object.keys(updateData).forEach(
-        (key) => updateData[key] === undefined && delete updateData[key],
-      );
-
-      await user.update(updateData);
-
-      return user;
-    } catch (error) {
-      console.error("Erro ao atualizar usuário:", error);
-      throw error;
+    if (email && email !== user.email) {
+      const exists = await User.findOne({ where: { email } });
+      if (exists) {
+        const err = new Error("Email já está em uso.");
+        err.status = 409;
+        throw err;
+      }
+      user.email = email;
     }
-  }
 
-  async delete(id) {
-    try {
-      const user = await this.findById(id);
-      await user.destroy();
-      return true;
-    } catch (error) {
-      console.error("Erro ao remover usuário:", error);
-      throw error.status
-        ? error
-        : new Error("Não foi possível remover o usuário.");
+    if (oldPassword) {
+      const valid = await user.checkPassword(oldPassword);
+      if (!valid) {
+        const err = new Error("Senha antiga incorreta.");
+        err.status = 400;
+        throw err;
+      }
+      if (password) {
+        user.password = password;
+      }
+    } else if (password) {
+      const err = new Error("Para alterar a senha, informe a senha antiga.");
+      err.status = 400;
+      throw err;
     }
+
+    if (name) user.name = name;
+    if (role) user.role = role;
+
+    await user.save();
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
   }
 }
 

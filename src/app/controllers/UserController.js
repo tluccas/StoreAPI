@@ -6,9 +6,15 @@ const service = new UserService();
 class UserController {
   async findAll(req, res) {
     const users = await service.findAll();
+    const usersDTO = users.map(({ id, name, email, role }) => ({
+      id,
+      name,
+      email,
+      role,
+    }));
     return res
       .status(users ? 200 : 400)
-      .json(users || { erro: "Nenhum usuário encontrado" });
+      .json(usersDTO || { erro: "Nenhum usuário encontrado" });
   }
 
   async findById(req, res) {
@@ -70,9 +76,9 @@ class UserController {
 
     try {
       await userUpdateSchema.validate(req.body, { abortEarly: false });
-      const { name, email, password, role } = req.body;
+      const updateData = req.body;
 
-      const atualizado = await service.update(id, name, email, password, role);
+      const atualizado = await service.update(id, updateData);
       return res.status(200).json(atualizado);
     } catch (error) {
       if (error.name === "ValidationError") {
