@@ -5,8 +5,16 @@ class OrderItem extends Model {
     super.init(
       {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-        orderId: { type: Sequelize.INTEGER, allowNull: false },
-        productId: { type: Sequelize.INTEGER, allowNull: false },
+        orderId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "orderId",
+        },
+        productId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "productId",
+        },
         quantity: { type: Sequelize.INTEGER, allowNull: false },
         price: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
       },

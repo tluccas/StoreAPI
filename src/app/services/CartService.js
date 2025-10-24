@@ -55,9 +55,6 @@ class CartService {
         await item.update({ quantity: item.quantity + quantity });
       }
 
-      product.stock -= quantity;
-      await product.save();
-
       return this.findByUserId(userId);
     } catch (error) {
       console.error("Erro ao adicionar item ao carrinho:", error);
@@ -77,18 +74,12 @@ class CartService {
         throw new Error("Item não encontrado no carrinho.");
       }
 
-      const product = await Product.findByPk(productId);
-
       if (quantity && quantity < item.quantity) {
         item.quantity -= quantity;
         await item.save();
-        product.stock += quantity;
       } else {
         await item.destroy();
-        product.stock += item.quantity;
       }
-
-      await product.save();
 
       return this.findByUserId(userId);
     } catch (error) {
@@ -101,11 +92,6 @@ class CartService {
     try {
       const cart = await this.findByUserId(userId);
       if (cart) {
-        for (const item of cart.items) {
-          const product = await Product.findByPk(item.productId);
-          product.stock += item.quantity;
-          await product.save();
-        }
         await CartItem.destroy({ where: { cartId: cart.id } });
         await cart.destroy();
       }

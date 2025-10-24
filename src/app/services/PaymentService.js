@@ -1,4 +1,5 @@
 import models from "../../database/index.js";
+
 const { Payment, Order } = models;
 
 class PaymentService {
@@ -13,7 +14,14 @@ class PaymentService {
   }
 
   async findById(id) {
-    const payment = await Payment.findByPk(id);
+    const payment = await Payment.findByPk(id, {
+      include: [
+        {
+          model: Order,
+          attributes: ["id", "userId"],
+        },
+      ],
+    });
     if (!payment) {
       throw new Error(`Pagamento com ID ${id} não encontrado.`);
     }
@@ -58,8 +66,17 @@ class PaymentService {
       }
 
       const order = await Order.findByPk(orderId);
+      const paymentExists = await Payment.findOne({
+        where: { orderId: orderId },
+      });
       if (!order) {
         throw new Error("Pedido não encontrado.");
+      }
+
+      if (paymentExists || order.status === "paid") {
+        throw new Error(
+          "Não é possível criar mais de um pagamento para o mesmo pedido.",
+        );
       }
 
       const newPayment = await Payment.create({
@@ -71,13 +88,23 @@ class PaymentService {
       return newPayment;
     } catch (error) {
       console.error("Erro ao criar pagamento:", error);
-      throw new Error("Não foi possível criar o pagamento.");
+      throw error;
     }
   }
 
-  async updateStatus(id, status) {
+  async updateStatus(id, status, userId) {
     try {
       const payment = await this.findById(id);
+
+      // Validar se o pagamento pertence ao usuário autenticado
+      if (userId && payment.Order && payment.Order.userId !== userId) {
+        const err = new Error(
+          "Você não tem permissão para atualizar este pagamento.",
+        );
+        err.status = 403;
+        throw err;
+      }
+
       if (!status) {
         const err = new Error(
           "Parâmetro 'status' inválido para atualizar pagamento.",
@@ -85,6 +112,7 @@ class PaymentService {
         err.status = 400;
         throw err;
       }
+
       await payment.update({
         status,
       });

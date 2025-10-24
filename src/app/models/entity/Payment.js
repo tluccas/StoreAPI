@@ -5,7 +5,11 @@ class Payment extends Model {
     super.init(
       {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-        orderId: { type: Sequelize.INTEGER, allowNull: false },
+        orderId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "orderId",
+        },
         amount: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
         method: {
           type: Sequelize.ENUM("credit", "debit", "cash", "pix"),

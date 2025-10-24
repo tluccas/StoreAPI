@@ -7,8 +7,27 @@ class Product extends Model {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
         name: { type: Sequelize.STRING, allowNull: false },
         description: { type: Sequelize.TEXT },
-        price: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
-        stock: { type: Sequelize.INTEGER, defaultValue: 0 },
+        price: {
+          type: Sequelize.DECIMAL(10, 2),
+          allowNull: false,
+        },
+        stock: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.literal(
+            "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          ),
+        },
         image: { type: Sequelize.STRING },
         categoryId: {
           type: Sequelize.INTEGER,

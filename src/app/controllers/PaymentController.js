@@ -48,16 +48,17 @@ class PaymentController {
       console.error("Erro ao criar pagamento:", error);
       return res
         .status(500)
-        .json({ erro: "Não foi possível criar o pagamento." });
+        .json({ erro: "Erro ao criar pagamento: " + error.message });
     }
   }
 
   async updateStatus(req, res) {
     const id = parseInt(req.params.id);
     const { status } = req.body;
+    const { userId } = req; // Obtém o ID do usuário autenticado
 
     try {
-      const atualizado = await service.updateStatus(id, status);
+      const atualizado = await service.updateStatus(id, status, userId);
       return res.status(200).json(atualizado);
     } catch (error) {
       console.error("Erro ao atualizar status do pagamento:", error);

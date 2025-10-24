@@ -5,7 +5,11 @@ class Cart extends Model {
     super.init(
       {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-        userId: { type: Sequelize.INTEGER, allowNull: false },
+        userId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "userId",
+        },
       },
       {
         sequelize,
@@ -22,7 +26,7 @@ class Cart extends Model {
     }
 
     if (models && models.CartItem) {
-      this.hasMany(models.CartItem, { foreignKey: "cartId" });
+      this.hasMany(models.CartItem, { foreignKey: "cartId", as: "items" });
     }
   }
 }

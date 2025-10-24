@@ -3,7 +3,8 @@ const service = new OrderService();
 
 class OrderController {
   async findAll(req, res) {
-    const orders = await service.findAll();
+    const { userId } = req;
+    const orders = await service.findAll(userId);
     return res
       .status(orders ? 200 : 400)
       .json(orders || { erro: "Nenhum pedido encontrado" });
@@ -46,6 +47,20 @@ class OrderController {
     } catch (error) {
       console.error("Erro ao criar pedido:", error);
       return res.status(500).json({ erro: "Não foi possível criar o pedido." });
+    }
+  }
+
+  async checkout(req, res) {
+    const { userId } = req; // ID do usuário vindo do middleware de autenticação
+
+    try {
+      const order = await service.checkout(userId);
+      return res.status(201).json(order);
+    } catch (error) {
+      console.error("Erro no controller ao finalizar pedido:", error);
+      return res
+        .status(400)
+        .json({ error: error.message || "Falha no checkout." });
     }
   }
 

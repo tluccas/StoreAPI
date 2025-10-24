@@ -6,8 +6,12 @@ class CartItem extends Model {
       {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
         quantity: { type: Sequelize.INTEGER, allowNull: false },
-        cartId: { type: Sequelize.INTEGER, allowNull: false },
-        productId: { type: Sequelize.INTEGER, allowNull: false },
+        cartId: { type: Sequelize.INTEGER, allowNull: false, field: "cartId" },
+        productId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          field: "productId",
+        },
       },
       {
         sequelize,

@@ -5,7 +5,7 @@ class Order extends Model {
     super.init(
       {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-        userId: { type: Sequelize.INTEGER, allowNull: false },
+        userId: { type: Sequelize.INTEGER, allowNull: false, field: "userId" },
         total: {
           type: Sequelize.DECIMAL(10, 2),
           allowNull: false,
@@ -32,7 +32,7 @@ class Order extends Model {
     }
 
     if (models && models.OrderItem) {
-      this.hasMany(models.OrderItem, { foreignKey: "orderId" });
+      this.hasMany(models.OrderItem, { foreignKey: "orderId", as: "items" });
     }
 
     if (models && models.Payment) {

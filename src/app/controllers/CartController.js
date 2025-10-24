@@ -3,7 +3,7 @@ const service = new CartService();
 
 class CartController {
   async findByUserId(req, res) {
-    const userId = parseInt(req.params.userId);
+    const { userId } = req;
     try {
       const cart = await service.findByUserId(userId);
       if (!cart) {
@@ -19,7 +19,8 @@ class CartController {
 
   async addItem(req, res) {
     try {
-      const { userId, productId, quantity } = req.body;
+      const { userId } = req;
+      const { productId, quantity } = req.body;
       const cart = await service.addItem(userId, productId, quantity);
       return res.status(200).json(cart);
     } catch (error) {
@@ -31,7 +32,8 @@ class CartController {
 
   async removeItem(req, res) {
     try {
-      const { userId, productId, quantity } = req.body;
+      const { userId } = req;
+      const { productId, quantity } = req.body;
       const cart = await service.removeItem(userId, productId, quantity);
       return res.status(200).json(cart);
     } catch (error) {
@@ -42,7 +44,7 @@ class CartController {
   }
 
   async delete(req, res) {
-    const userId = parseInt(req.params.userId);
+    const { userId } = req;
 
     try {
       await service.delete(userId);
