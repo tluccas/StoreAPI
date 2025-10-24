@@ -1,4 +1,9 @@
 import ProdutoService from "../services/ProductService";
+import {
+  productSchema,
+  productUpdateSchema,
+  productStockSchema,
+} from "../validators/ProductValidator.js";
 const service = new ProdutoService();
 
 class ProdutoController {
@@ -63,6 +68,8 @@ class ProdutoController {
 
   async criar(req, res) {
     try {
+      await productSchema.validate(req.body, { abortEarly: false });
+
       const { name, price, stock, categoryId, image, description } = req.body;
 
       const novo = await service.create({
@@ -76,6 +83,13 @@ class ProdutoController {
 
       return res.status(201).json(novo);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao criar produto:", error);
       return res
         .status(500)
@@ -85,9 +99,12 @@ class ProdutoController {
 
   async update(req, res) {
     const id = parseInt(req.params.id);
-    const { name, description, price, stock } = req.body;
 
     try {
+      await productUpdateSchema.validate(req.body, { abortEarly: false });
+
+      const { name, description, price, stock } = req.body;
+
       const atualizado = await service.update(
         id,
         name,
@@ -97,6 +114,13 @@ class ProdutoController {
       );
       return res.status(200).json(atualizado);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao atualizar produto:", error);
 
       const status =
@@ -108,12 +132,22 @@ class ProdutoController {
 
   async updateStock(req, res) {
     const id = parseInt(req.params.id);
-    const { stock } = req.body;
 
     try {
+      await productStockSchema.validate(req.body, { abortEarly: false });
+
+      const { stock } = req.body;
+
       const atualizado = await service.updateStock(id, stock);
       return res.status(200).json(atualizado);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       const status =
         error.status || (error.message.includes("não encontrado") ? 404 : 500);
       return res.status(status).json({ erro: error.message });

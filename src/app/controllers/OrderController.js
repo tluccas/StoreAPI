@@ -1,4 +1,8 @@
 import OrderService from "../services/OrderService.js";
+import {
+  orderSchema,
+  orderStatusSchema,
+} from "../validators/OrderValidator.js";
 const service = new OrderService();
 
 class OrderController {
@@ -36,6 +40,8 @@ class OrderController {
 
   async create(req, res) {
     try {
+      await orderSchema.validate(req.body, { abortEarly: false });
+
       const { userId, items } = req.body;
 
       const novo = await service.create({
@@ -45,6 +51,13 @@ class OrderController {
 
       return res.status(201).json(novo);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao criar pedido:", error);
       return res.status(500).json({ erro: "Não foi possível criar o pedido." });
     }
@@ -66,12 +79,22 @@ class OrderController {
 
   async updateStatus(req, res) {
     const id = parseInt(req.params.id);
-    const { status } = req.body;
 
     try {
+      await orderStatusSchema.validate(req.body, { abortEarly: false });
+
+      const { status } = req.body;
+
       const atualizado = await service.updateStatus(id, status);
       return res.status(200).json(atualizado);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao atualizar status do pedido:", error);
 
       const statusCode =

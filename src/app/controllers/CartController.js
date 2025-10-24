@@ -1,4 +1,5 @@
 import CartService from "../services/CartService.js";
+import { cartItemSchema } from "../validators/CartValidator.js";
 const service = new CartService();
 
 class CartController {
@@ -19,11 +20,20 @@ class CartController {
 
   async addItem(req, res) {
     try {
+      await cartItemSchema.validate(req.body, { abortEarly: false });
+
       const { userId } = req;
       const { productId, quantity } = req.body;
       const cart = await service.addItem(userId, productId, quantity);
       return res.status(200).json(cart);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       return res
         .status(500)
         .json({ erro: error.message || "Não foi possível adicionar o item." });
@@ -32,11 +42,20 @@ class CartController {
 
   async removeItem(req, res) {
     try {
+      await cartItemSchema.validate(req.body, { abortEarly: false });
+
       const { userId } = req;
       const { productId, quantity } = req.body;
       const cart = await service.removeItem(userId, productId, quantity);
       return res.status(200).json(cart);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       return res
         .status(500)
         .json({ erro: error.message || "Não foi possível remover o item." });

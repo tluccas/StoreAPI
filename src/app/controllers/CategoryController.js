@@ -1,4 +1,8 @@
 import CategoryService from "../services/CategoryService.js";
+import {
+  categorySchema,
+  categoryUpdateSchema,
+} from "../validators/CategoryValidator.js";
 const service = new CategoryService();
 
 class CategoryController {
@@ -23,6 +27,8 @@ class CategoryController {
 
   async create(req, res) {
     try {
+      await categorySchema.validate(req.body, { abortEarly: false });
+
       const { name } = req.body;
 
       const nova = await service.create({
@@ -31,6 +37,13 @@ class CategoryController {
 
       return res.status(201).json(nova);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao criar categoria:", error);
       return res
         .status(500)
@@ -40,12 +53,22 @@ class CategoryController {
 
   async update(req, res) {
     const id = parseInt(req.params.id);
-    const { name } = req.body;
 
     try {
+      await categoryUpdateSchema.validate(req.body, { abortEarly: false });
+
+      const { name } = req.body;
+
       const atualizada = await service.update(id, name);
       return res.status(200).json(atualizada);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao atualizar categoria:", error);
 
       const status =

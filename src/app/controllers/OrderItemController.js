@@ -1,4 +1,8 @@
 import OrderItemService from "../services/OrderItemService.js";
+import {
+  orderItemSchema,
+  orderItemUpdateSchema,
+} from "../validators/OrderItemValidator.js";
 const service = new OrderItemService();
 
 class OrderItemController {
@@ -36,6 +40,8 @@ class OrderItemController {
 
   async create(req, res) {
     try {
+      await orderItemSchema.validate(req.body, { abortEarly: false });
+
       const { orderId, productId, quantity, price } = req.body;
 
       const novo = await service.create({
@@ -47,6 +53,13 @@ class OrderItemController {
 
       return res.status(201).json(novo);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao criar item de pedido:", error);
       return res
         .status(500)
@@ -56,12 +69,22 @@ class OrderItemController {
 
   async update(req, res) {
     const id = parseInt(req.params.id);
-    const { quantity } = req.body;
 
     try {
+      await orderItemUpdateSchema.validate(req.body, { abortEarly: false });
+
+      const { quantity } = req.body;
+
       const atualizado = await service.update(id, quantity);
       return res.status(200).json(atualizado);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao atualizar item de pedido:", error);
 
       const statusCode =
