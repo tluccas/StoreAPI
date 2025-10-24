@@ -59,12 +59,8 @@ class PaymentService {
     }
   }
 
-  async create({ orderId, amount, method }) {
+  async create({ orderId, method }) {
     try {
-      if (!orderId || !amount || !method) {
-        throw new Error("Parâmetros inválidos para criar pagamento.");
-      }
-
       const order = await Order.findByPk(orderId);
       const paymentExists = await Payment.findOne({
         where: { orderId: orderId },
@@ -81,7 +77,7 @@ class PaymentService {
 
       const newPayment = await Payment.create({
         orderId,
-        amount,
+        amount: order.total,
         method,
       });
 

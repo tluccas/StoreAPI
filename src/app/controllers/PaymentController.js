@@ -1,4 +1,8 @@
 import PaymentService from "../services/PaymentService.js";
+import {
+  paymentSchema,
+  paymentStatusSchema,
+} from "../validators/PaymentValidator.js";
 const service = new PaymentService();
 
 class PaymentController {
@@ -35,16 +39,24 @@ class PaymentController {
 
   async create(req, res) {
     try {
-      const { orderId, amount, method } = req.body;
+      await paymentSchema.validate(req.body, { abortEarly: false });
+
+      const { orderId, method } = req.body;
 
       const novo = await service.create({
         orderId,
-        amount,
         method,
       });
 
       return res.status(201).json(novo);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao criar pagamento:", error);
       return res
         .status(500)
@@ -54,13 +66,23 @@ class PaymentController {
 
   async updateStatus(req, res) {
     const id = parseInt(req.params.id);
-    const { status } = req.body;
     const { userId } = req; // Obtém o ID do usuário autenticado
 
     try {
+      await paymentStatusSchema.validate(req.body, { abortEarly: false });
+
+      const { status } = req.body;
+
       const atualizado = await service.updateStatus(id, status, userId);
       return res.status(200).json(atualizado);
     } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          erro: "Erro de validação",
+          details: error.errors,
+        });
+      }
+
       console.error("Erro ao atualizar status do pagamento:", error);
 
       const statusCode =
