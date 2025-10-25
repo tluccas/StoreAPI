@@ -74,10 +74,14 @@ class CartService {
         throw new Error("Item não encontrado no carrinho.");
       }
 
-      if (quantity && quantity < item.quantity) {
+      if (!quantity || quantity <= 0) {
+        throw new Error("Quantidade deve ser maior que zero.");
+      }
+
+      if (quantity < item.quantity) {
         item.quantity -= quantity;
         await item.save();
-      } else {
+      } else if (quantity >= item.quantity) {
         await item.destroy();
       }
 
