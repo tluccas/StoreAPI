@@ -1,4 +1,4 @@
-import ProdutoService from "../services/ProductService";
+import ProdutoService from "../services/ProductService.js";
 import {
   productSchema,
   productUpdateSchema,
