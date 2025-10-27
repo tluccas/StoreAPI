@@ -145,6 +145,29 @@ class OrderService {
       throw new Error(error.message || "Não foi possível finalizar o pedido.");
     }
   }
+
+  async delete(id) {
+    const t = await sequelize.transaction();
+    try {
+      const existingOrder = await Order.findByPk(id, { transaction: t });
+      if (!existingOrder) {
+        throw new Error("Pedido não encontrado.");
+      }
+
+      await OrderItem.destroy({ where: { orderId: id }, transaction: t });
+
+      const deleted = await Order.destroy({ where: { id }, transaction: t });
+
+      await t.commit();
+      return !!deleted;
+    } catch (error) {
+      if (!t.finished) {
+        await t.rollback();
+      }
+      console.error("Erro ao deletar pedido:", error);
+      throw error;
+    }
+  }
   async findById(id) {
     const order = await Order.findByPk(id, {
       include: [{ model: OrderItem, as: "items", include: [Product] }],
