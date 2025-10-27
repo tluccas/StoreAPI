@@ -145,6 +145,12 @@ class OrderService {
       throw new Error(error.message || "Não foi possível finalizar o pedido.");
     }
   }
+  async findById(id) {
+    const order = await Order.findByPk(id, {
+      include: [{ model: OrderItem, as: "items", include: [Product] }],
+    });
+    return order;
+  }
 }
 
 export default OrderService;
