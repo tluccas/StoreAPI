@@ -106,9 +106,10 @@ class OrderController {
 
   async delete(req, res) {
     const id = parseInt(req.params.id);
+    const { userId } = req;
 
     try {
-      await service.delete(id);
+      await service.delete(id, userId);
       return res.status(200).json({ sucesso: true });
     } catch (error) {
       const status =

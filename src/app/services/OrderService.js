@@ -146,12 +146,20 @@ class OrderService {
     }
   }
 
-  async delete(id) {
+  async delete(id, userId) {
     const t = await sequelize.transaction();
     try {
       const existingOrder = await Order.findByPk(id, { transaction: t });
       if (!existingOrder) {
         throw new Error("Pedido não encontrado.");
+      }
+
+      if (existingOrder.userId !== userId) {
+        const err = new Error(
+          "Você não tem permissão para deletar este pedido.",
+        );
+        err.status = 403;
+        throw err;
       }
 
       await OrderItem.destroy({ where: { orderId: id }, transaction: t });
