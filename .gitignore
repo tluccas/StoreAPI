@@ -2,3 +2,5 @@ node_modules/
 teste.js
 .env
 docs/fluxo_backend.pdf
+docs/Fluxo_Cart.md
+.vscode/
