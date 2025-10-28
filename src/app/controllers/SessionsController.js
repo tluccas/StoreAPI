@@ -15,15 +15,16 @@ class SessionsController {
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ error: "Senha errada" });
     }
-    const { id, name } = user;
+    const { id, name, role } = user;
 
     return res.json({
       user: {
         id,
         name,
         email,
+        role,
       },
-      token: JWT.sign({ id }, authConfig.secret, {
+      token: JWT.sign({ id, role }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),
     });
