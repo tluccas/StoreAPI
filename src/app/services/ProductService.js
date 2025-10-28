@@ -37,14 +37,15 @@ class ProductService {
   }
 
   async findByPreco(preco) {
+    const roundedPrice = parseFloat(preco.toFixed(2));
     const products = await Product.findAll({
       where: {
-        price: preco,
+        price: roundedPrice,
       },
     });
 
     if (products == null || products.length === 0) {
-      throw new Error(`Nenhum produto encontrado com o preço ${preco}.`);
+      throw new Error(`Nenhum produto encontrado com o preço ${roundedPrice}.`);
     }
     return products;
   }
