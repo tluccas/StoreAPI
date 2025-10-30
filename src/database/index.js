@@ -39,7 +39,9 @@ class DataBase {
 
 const database = new DataBase();
 
-export { database };
+const { connection: sequelize } = database;
+
+export { database, sequelize };
 export default {
   User,
   Cart,
@@ -49,4 +51,5 @@ export default {
   Product,
   Category,
   CartItem,
+  sequelize,
 };
