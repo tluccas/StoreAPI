@@ -49,6 +49,15 @@ class OrderService {
       );
 
       for (const item of items) {
+        const product = await Product.findByPk(item.productId);
+        if (!product) {
+          throw new Error(`Produto com ID ${item.productId} não encontrado.`);
+        }
+        if (product.stock < item.quantity) {
+          throw new Error(
+            `Estoque insuficiente para o produto: ${product.name}`,
+          );
+        }
         await OrderItem.create(
           {
             orderId: newOrder.id,
