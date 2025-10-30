@@ -41,4 +41,12 @@ const userUpdateSchema = yup.object().shape({
   role: yup.string().optional(),
 });
 
-export { userSchema, userUpdateSchema };
+const userLoginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Formato de e-mail inválido.")
+    .required("Insira o e-mail."),
+  password: yup.string().required("Insira a senha"),
+});
+
+export { userSchema, userUpdateSchema, userLoginSchema };

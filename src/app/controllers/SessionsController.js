@@ -1,11 +1,12 @@
 import User from "../models/entity/User.js";
 import JWT from "jsonwebtoken";
 import authConfig from "../../config/auth.js";
+import { userLoginSchema } from "../validators/UserValidator.js";
 
 class SessionsController {
   async create(req, res) {
+    await userLoginSchema.validate(req.body, { abortEarly: false });
     const { email, password } = req.body;
-
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
