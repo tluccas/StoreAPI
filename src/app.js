@@ -8,6 +8,8 @@ import orderItemRoutes from "./app/routes/OrderItemRoutes.js";
 import paymentRoutes from "./app/routes/PaymentRoutes.js";
 import authMiddleware from "./app/middlewares/auth.js";
 import sessionRoutes from "./app/routes/SessionsRoutes.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "../docs/swagger.json";
 
 import "./database/index.js";
 
@@ -24,6 +26,7 @@ class App {
 
   routes() {
     //Public routes
+    this.server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     this.server.use("/sessions", sessionRoutes);
     //auth middleware
     this.server.use(authMiddleware);
