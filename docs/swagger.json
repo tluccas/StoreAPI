@@ -113,18 +113,22 @@
                 "type": "integer"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "example": "user"
               },
               "email": {
-                "type": "string"
+                "type": "string",
+                "example": "user@example.com"
               },
               "role": {
-                "type": "string"
-              },
-              "token": {
-                "type": "string"
+                "type": "string",
+                "example": "admin"
               }
             }
+          },
+          "token": {
+            "type": "string",
+            "example": "jwt_token_example"
           }
         }
       }
