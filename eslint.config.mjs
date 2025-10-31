@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import prettierPlugin from "eslint-plugin-prettier";
 import jsonc from "eslint-plugin-jsonc";
+import parser from "jsonc-eslint-parser";
 import { defineConfig } from "@eslint/config-helpers";
 
 export default defineConfig([
@@ -30,7 +31,9 @@ export default defineConfig([
   {
     files: ["docs/swagger.json"],
     plugins: { jsonc },
-    language: "jsonc/jsonc",
+    languageOptions: {
+      parser,
+    },
     rules: {
       "jsonc/indent": ["error", 2],
       "jsonc/quotes": ["error", "double"],
