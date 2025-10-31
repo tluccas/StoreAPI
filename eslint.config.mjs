@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
 import prettierPlugin from "eslint-plugin-prettier";
+import jsonc from "eslint-plugin-jsonc";
 import { defineConfig } from "@eslint/config-helpers";
 
 export default defineConfig([
@@ -23,6 +24,18 @@ export default defineConfig([
       "no-param-reassign": "off",
       camelcase: "off",
       "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
+    },
+  },
+
+  {
+    files: ["docs/swagger.json"],
+    plugins: { jsonc },
+    language: "json",
+    rules: {
+      "jsonc/indent": ["error", 2],
+      "jsonc/quotes": ["error", "double"],
+      "jsonc/no-dupe-keys": "error",
+      "jsonc/valid-json-number": "error",
     },
   },
 ]);
