@@ -30,7 +30,7 @@ export default defineConfig([
   {
     files: ["docs/swagger.json"],
     plugins: { jsonc },
-    language: "json",
+    language: "jsonc/jsonc",
     rules: {
       "jsonc/indent": ["error", 2],
       "jsonc/quotes": ["error", "double"],
